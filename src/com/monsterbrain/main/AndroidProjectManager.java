@@ -7,15 +7,22 @@ package com.monsterbrain.main;
 
 /**
  *
- * @author 1116
+ * @author Faisal Rasak
  */
 public class AndroidProjectManager {
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                final MainContentJFrame mainContentJFrame = new MainContentJFrame();
+                
+                mainContentJFrame.setVisible(true);
+                mainContentJFrame.addFileDropListener();
+            }
+        });
     }
     
 }
