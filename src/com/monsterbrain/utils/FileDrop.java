@@ -1,4 +1,4 @@
-package com.monsterbrain.main.utils;
+package com.monsterbrain.utils;
 
 
 import java.awt.datatransfer.DataFlavor;

@@ -5,12 +5,17 @@
  */
 package com.monsterbrain.main;
 
-import com.monsterbrain.main.utils.FileDrop;
+import com.monsterbrain.ui.ProjectJPanel;
+import com.monsterbrain.utils.FileDrop;
 import java.awt.Desktop;
+import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -24,9 +29,10 @@ public class MainContentJFrame extends javax.swing.JFrame {
     public MainContentJFrame() {
         initComponents();
     }
-    
+
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void addFileDropListener() {
-        new FileDrop(System.out, myTextArea, /*dragBorder,*/ new FileDrop.Listener() {
+        new FileDrop(System.out, jPanel1, /*dragBorder,*/ new FileDrop.Listener() {
             public void filesDropped(java.io.File[] files) {
                 try {
                     Desktop.getDesktop().open(new File("C:\\"));
@@ -37,6 +43,11 @@ public class MainContentJFrame extends javax.swing.JFrame {
                     try {
                         String fileType = files[i].isDirectory() ? "folder" : "File";
 
+                        if (isAndroidProject(files[i])) {
+                            System.out.println("Android Project - yeah");
+                            JOptionPane.showMessageDialog(MainContentJFrame.this, "Eggs are not supposed to be green.");
+                        }
+
                         // System.out.println("");
                         //text.append( files[i].getCanonicalPath() +"-"+fileType+ "\n" );
                         System.out.println(files[i].getCanonicalPath() + "-" + fileType + "\n");
@@ -45,9 +56,37 @@ public class MainContentJFrame extends javax.swing.JFrame {
                     }
                 }   // end for: through each dropped file
             }   // end filesDropped
+
+            private boolean isAndroidProject(File file) {
+                if (file.getName().equalsIgnoreCase("build.gradle")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }); // end FileDrop.Listener
+
+        addSomethings();
     }
-    
+
+    public void addSomethings() {
+        BoxLayout layout = new BoxLayout(jPanel1, BoxLayout.Y_AXIS);
+//        layout.setHgap(10);
+//        layout.setVgap(10);
+        jPanel1.setLayout(layout);
+        // use box layout
+        jPanel1.add(new JButton("OK"));
+        jPanel1.add(new ProjectJPanel());
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new JButton("Cancel"));
+
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +99,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         myTextArea = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,20 +108,35 @@ public class MainContentJFrame extends javax.swing.JFrame {
         myTextArea.setName("myTextArea"); // NOI18N
         jScrollPane1.setViewportView(myTextArea);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 164, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -124,6 +179,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea myTextArea;
     // End of variables declaration//GEN-END:variables
