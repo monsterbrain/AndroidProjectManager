@@ -6,11 +6,13 @@
 package com.monsterbrain.main;
 
 import com.monsterbrain.ui.ProjectJPanel;
+import com.monsterbrain.utils.Constants;
 import com.monsterbrain.utils.FileDrop;
 import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BoxLayout;
@@ -76,16 +78,34 @@ public class MainContentJFrame extends javax.swing.JFrame {
         jPanel1.setLayout(layout);
         // use box layout
         jPanel1.add(new JButton("OK"));
-        jPanel1.add(new ProjectJPanel());
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
-        jPanel1.add(new JButton("Cancel"));
+        jPanel1.add(new ProjectJPanel(actionString -> handleAction(actionString)));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
+//        jPanel1.add(new JButton("Cancel"));
 
+    }
+
+    private Void handleAction(String actionString) {
+        switch (actionString) {
+            case Constants.ACTION_OPEN_PROJECT_FOLDER:
+                System.out.println("Open Project Folder");
+                break;
+            case Constants.ACTION_OPEN_BUILD_FOLDER:
+                System.out.println("Open Build Folder");
+                break;
+            case Constants.ACTION_OPEN_SRC_FOLDER:
+                System.out.println("Open Src Folder");
+                break;
+            default:
+                break;
+        }
+        
+        return null;
     }
 
     /**

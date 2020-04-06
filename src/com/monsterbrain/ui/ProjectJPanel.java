@@ -5,16 +5,23 @@
  */
 package com.monsterbrain.ui;
 
+import com.monsterbrain.utils.Constants;
+import java.util.function.Function;
+
 /**
  *
  * @author 1116
  */
 public class ProjectJPanel extends javax.swing.JPanel {
 
+    private final Function<String, Void> callbackFn;
+
     /**
      * Creates new form ProjectJPanel
+     * @param callback
      */
-    public ProjectJPanel() {
+    public ProjectJPanel(Function<String,Void> callback) {
+        this.callbackFn = callback;
         initComponents();
     }
 
@@ -27,14 +34,33 @@ public class ProjectJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnOpenFolder = new javax.swing.JButton();
+        btnOpenSrcFolder = new javax.swing.JButton();
+        btnOpenBuildFolder = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Project Title"));
 
-        jButton1.setText("Open Folder");
+        btnOpenFolder.setText("Open Folder");
+        btnOpenFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenFolderActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Src Folder");
+        btnOpenSrcFolder.setText("Src Folder");
+        btnOpenSrcFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenSrcFolderActionPerformed(evt);
+            }
+        });
+
+        btnOpenBuildFolder.setText("Build Folder");
+        btnOpenBuildFolder.setActionCommand("Build Folder");
+        btnOpenBuildFolder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenBuildFolderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -42,25 +68,41 @@ public class ProjectJPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(jButton1)
+                .addComponent(btnOpenFolder)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addComponent(btnOpenSrcFolder)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOpenBuildFolder)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(128, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnOpenFolder)
+                    .addComponent(btnOpenSrcFolder)
+                    .addComponent(btnOpenBuildFolder))
                 .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnOpenFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFolderActionPerformed
+        callbackFn.apply(Constants.ACTION_OPEN_PROJECT_FOLDER);
+    }//GEN-LAST:event_btnOpenFolderActionPerformed
+
+    private void btnOpenSrcFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenSrcFolderActionPerformed
+        callbackFn.apply(Constants.ACTION_OPEN_SRC_FOLDER);
+    }//GEN-LAST:event_btnOpenSrcFolderActionPerformed
+
+    private void btnOpenBuildFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenBuildFolderActionPerformed
+        callbackFn.apply(Constants.ACTION_OPEN_BUILD_FOLDER);
+    }//GEN-LAST:event_btnOpenBuildFolderActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnOpenBuildFolder;
+    private javax.swing.JButton btnOpenFolder;
+    private javax.swing.JButton btnOpenSrcFolder;
     // End of variables declaration//GEN-END:variables
 }
