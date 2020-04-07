@@ -5,23 +5,19 @@
  */
 package com.monsterbrain.main;
 
+import com.monsterbrain.model.ProjectModel;
 import com.monsterbrain.ui.ProjectJPanel;
 import com.monsterbrain.utils.Constants;
 import com.monsterbrain.utils.FileDrop;
-import java.awt.Desktop;
-import java.awt.FlowLayout;
+import com.monsterbrain.utils.SaveFileUtils;
+import java.awt.GridLayout;
 import java.io.File;
-import java.io.IOException;
-import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author 1116
+ * 
+ * @author Faisal Rasak
  */
 public class MainContentJFrame extends javax.swing.JFrame {
 
@@ -30,64 +26,52 @@ public class MainContentJFrame extends javax.swing.JFrame {
      */
     public MainContentJFrame() {
         initComponents();
+
+        GridLayout gridLayout = new GridLayout(4, 3, 16, 16);
+        mainPanel.setLayout(gridLayout);
+        
+        loadProjectFromJson();
     }
 
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
     public void addFileDropListener() {
-        new FileDrop(System.out, jPanel1, /*dragBorder,*/ new FileDrop.Listener() {
-            public void filesDropped(java.io.File[] files) {
-                try {
-                    Desktop.getDesktop().open(new File("C:\\"));
-                } catch (IOException ex) {
-                    Logger.getLogger(MainContentJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                for (int i = 0; i < files.length; i++) {
+        new FileDrop(System.out, mainPanel, /*dragBorder,*/ new FileDrop.Listener() {
+            @Override
+            public void filesDropped(File[] files) {
+                for (File file : files) {
                     try {
-                        String fileType = files[i].isDirectory() ? "folder" : "File";
+                        String fileType = file.isDirectory() ? "folder" : "File";
+                        if (fileType.equals("folder")) {
+                            String projectPath = file.getAbsolutePath();
+                            String projectName = file.getName();
+                            String[] gradleFileArray = file.list((File dir, String fileName) -> fileName.equals("build.gradle"));
+                            boolean isAndroidProject = checkIfAndroidProject(gradleFileArray);
 
-                        if (isAndroidProject(files[i])) {
-                            System.out.println("Android Project - yeah");
-                            JOptionPane.showMessageDialog(MainContentJFrame.this, "Eggs are not supposed to be green.");
+                            if (isAndroidProject) {
+                                addAndroidProject(projectName, projectPath);
+                                JOptionPane.showMessageDialog(MainContentJFrame.this, "Android project - ["+projectName+"] added");
+                            }
                         }
-
-                        // System.out.println("");
-                        //text.append( files[i].getCanonicalPath() +"-"+fileType+ "\n" );
-                        System.out.println(files[i].getCanonicalPath() + "-" + fileType + "\n");
-                    } // end try
-                    catch (java.io.IOException e) {
+                    } catch (Exception e) {
+                        System.out.println("error = " + e.getMessage());
                     }
-                }   // end for: through each dropped file
-            }   // end filesDropped
-
-            private boolean isAndroidProject(File file) {
-                if (file.getName().equalsIgnoreCase("build.gradle")) {
-                    return true;
-                } else {
-                    return false;
                 }
             }
-        }); // end FileDrop.Listener
 
-        addSomethings();
+            private boolean checkIfAndroidProject(String[] gradleFileArray) {
+                if (gradleFileArray == null) {
+                    return false;
+                }
+
+                return (gradleFileArray.length > 0);
+            }
+        });
     }
 
-    public void addSomethings() {
-        BoxLayout layout = new BoxLayout(jPanel1, BoxLayout.Y_AXIS);
-//        layout.setHgap(10);
-//        layout.setVgap(10);
-        jPanel1.setLayout(layout);
-        // use box layout
-        jPanel1.add(new JButton("OK"));
-        jPanel1.add(new ProjectJPanel(actionString -> handleAction(actionString)));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-//        jPanel1.add(new JButton("Cancel"));
-
+    private void addAndroidProject(String projectName, String projectPath) {
+        ProjectModel model = new ProjectModel(projectName, projectPath, projectName);
+        SaveFileUtils.instance().addNewProjectToJson(model);
+        mainPanel.add(new ProjectJPanel(model, actionString -> handleAction(actionString)));
     }
 
     private Void handleAction(String actionString) {
@@ -104,7 +88,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
             default:
                 break;
         }
-        
+
         return null;
     }
 
@@ -117,27 +101,15 @@ public class MainContentJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        myTextArea = new javax.swing.JTextArea();
-        jPanel1 = new javax.swing.JPanel();
+        mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Android Project Manager - APM 1.0");
 
-        myTextArea.setColumns(20);
-        myTextArea.setRows(5);
-        myTextArea.setName("myTextArea"); // NOI18N
-        jScrollPane1.setViewportView(myTextArea);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 164, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        java.awt.GridBagLayout mainPanelLayout = new java.awt.GridBagLayout();
+        mainPanelLayout.columnWidths = new int[] {0};
+        mainPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
+        mainPanel.setLayout(mainPanelLayout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -145,18 +117,14 @@ public class MainContentJFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 640, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -191,16 +159,19 @@ public class MainContentJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainContentJFrame().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainContentJFrame().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea myTextArea;
+    private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
+
+    private void loadProjectFromJson() {
+        List<ProjectModel> projectList = SaveFileUtils.instance().getProjectModelList();
+        for (int i = 0; i < projectList.size(); i++) {
+            mainPanel.add(new ProjectJPanel(projectList.get(i), actionString -> handleAction(actionString)));
+        }
+    }
 }

@@ -5,24 +5,36 @@
  */
 package com.monsterbrain.ui;
 
+import com.monsterbrain.model.ProjectModel;
 import com.monsterbrain.utils.Constants;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.function.Function;
+import javax.swing.border.TitledBorder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
- * @author 1116
+ * @author Faisal Rasak
  */
 public class ProjectJPanel extends javax.swing.JPanel {
 
     private final Function<String, Void> callbackFn;
+    private ProjectModel projectInfo;
 
     /**
      * Creates new form ProjectJPanel
+     *
+     * @param model
      * @param callback
      */
-    public ProjectJPanel(Function<String,Void> callback) {
+    public ProjectJPanel(ProjectModel model, Function<String, Void> callback) {
         this.callbackFn = callback;
+        projectInfo = model;
         initComponents();
+        showDetails();
     }
 
     /**
@@ -89,14 +101,38 @@ public class ProjectJPanel extends javax.swing.JPanel {
 
     private void btnOpenFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFolderActionPerformed
         callbackFn.apply(Constants.ACTION_OPEN_PROJECT_FOLDER);
+
+        try {
+            Desktop.getDesktop().open(new File(projectInfo.getLocation()));
+        } catch (IOException ex) {
+            Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnOpenFolderActionPerformed
 
     private void btnOpenSrcFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenSrcFolderActionPerformed
         callbackFn.apply(Constants.ACTION_OPEN_SRC_FOLDER);
+
+        File srcFolder = new File(projectInfo.getLocation() + File.separator + "app" + File.separator + "src");
+        if (srcFolder.exists()) {
+            try {
+                Desktop.getDesktop().open(srcFolder);
+            } catch (IOException ex) {
+                Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnOpenSrcFolderActionPerformed
 
     private void btnOpenBuildFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenBuildFolderActionPerformed
         callbackFn.apply(Constants.ACTION_OPEN_BUILD_FOLDER);
+        
+        File buildFolder = new File(projectInfo.getLocation() + File.separator + "app" + File.separator + "build");
+        if (buildFolder.exists()) {
+            try {
+                Desktop.getDesktop().open(buildFolder);
+            } catch (IOException ex) {
+                Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnOpenBuildFolderActionPerformed
 
 
@@ -105,4 +141,11 @@ public class ProjectJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnOpenFolder;
     private javax.swing.JButton btnOpenSrcFolder;
     // End of variables declaration//GEN-END:variables
+
+    private void showDetails() {
+        // set project title
+        if (getBorder() instanceof TitledBorder) {
+            ((TitledBorder) getBorder()).setTitle(projectInfo.getDisplayName());
+        }
+    }
 }
