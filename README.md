@@ -19,4 +19,4 @@ Android studio is an overkill I guess.
 - Lombok for @data
 - Gson for json handling
 
-*[Monster Brain](monsterbraininc.com) - 2020*
+*[Monster Brain](http://monsterbraininc.com) - 2020*
