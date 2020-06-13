@@ -8,8 +8,15 @@ package com.monsterbrain.ui;
 import com.monsterbrain.model.ProjectModel;
 import com.monsterbrain.utils.Constants;
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.Function;
 import javax.swing.border.TitledBorder;
 import java.util.logging.Level;
@@ -49,6 +56,7 @@ public class ProjectJPanel extends javax.swing.JPanel {
         btnOpenFolder = new javax.swing.JButton();
         btnOpenSrcFolder = new javax.swing.JButton();
         btnOpenBuildFolder = new javax.swing.JButton();
+        btnOpenProject = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder("Project Title"));
 
@@ -67,10 +75,16 @@ public class ProjectJPanel extends javax.swing.JPanel {
         });
 
         btnOpenBuildFolder.setText("Build Folder");
-        btnOpenBuildFolder.setActionCommand("Build Folder");
         btnOpenBuildFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpenBuildFolderActionPerformed(evt);
+            }
+        });
+
+        btnOpenProject.setText("Open Project in AS");
+        btnOpenProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenProjectActionPerformed(evt);
             }
         });
 
@@ -79,18 +93,23 @@ public class ProjectJPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(btnOpenFolder)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnOpenSrcFolder)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnOpenBuildFolder)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnOpenProject)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnOpenFolder)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnOpenSrcFolder)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnOpenBuildFolder)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(128, Short.MAX_VALUE)
+                .addContainerGap(32, Short.MAX_VALUE)
+                .addComponent(btnOpenProject)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOpenFolder)
                     .addComponent(btnOpenSrcFolder)
@@ -115,6 +134,17 @@ public class ProjectJPanel extends javax.swing.JPanel {
         File srcFolder = new File(projectInfo.getLocation() + File.separator + "app" + File.separator + "src");
         if (srcFolder.exists()) {
             try {
+                Files.walkFileTree(srcFolder.toPath(), new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        System.out.println("file = " + file);
+                        return super.visitFile(file, attrs); //To change body of generated methods, choose Tools | Templates.
+                    }
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
                 Desktop.getDesktop().open(srcFolder);
             } catch (IOException ex) {
                 Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,7 +154,7 @@ public class ProjectJPanel extends javax.swing.JPanel {
 
     private void btnOpenBuildFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenBuildFolderActionPerformed
         callbackFn.apply(Constants.ACTION_OPEN_BUILD_FOLDER);
-        
+
         File buildFolder = new File(projectInfo.getLocation() + File.separator + "app" + File.separator + "build");
         if (buildFolder.exists()) {
             try {
@@ -135,10 +165,38 @@ public class ProjectJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnOpenBuildFolderActionPerformed
 
+    private void btnOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenProjectActionPerformed
+        String androidStudioPath = "C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe";
+        ProcessBuilder builder = new ProcessBuilder(
+            "cmd.exe", "/c", "\""+androidStudioPath+"\" "+projectInfo.getLocation());
+        builder.redirectErrorStream(true);
+        Process p;
+        try {
+            p = builder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while (true) {
+                line = reader.readLine();
+                if (line == null) { break; }
+                System.out.println(line);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//        String line;
+//        while (true) {
+//            line = r.readLine();
+//            if (line == null) { break; }
+//            System.out.println(line);
+//        }
+    }//GEN-LAST:event_btnOpenProjectActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOpenBuildFolder;
     private javax.swing.JButton btnOpenFolder;
+    private javax.swing.JButton btnOpenProject;
     private javax.swing.JButton btnOpenSrcFolder;
     // End of variables declaration//GEN-END:variables
 
