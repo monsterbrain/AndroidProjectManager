@@ -45,6 +45,10 @@ public class SaveFileUtils {
         return projectModelList;
     }
 
+    public ConfigModel getProgramConfig() {
+        return programConfig;
+    }
+
     public SaveFileUtils() {
         File saveFolder = getSaveFileFolder();
 
@@ -57,20 +61,21 @@ public class SaveFileUtils {
         }
         
         File configJson = new File(saveFolder, "config.json");
-        String configJsonString = readStringFromFile(configJson);
-        if (!configJsonString.isEmpty()) {
-            Type modelType = new TypeToken<ConfigModel>(){}.getType();
-            programConfig = new Gson().fromJson(configJsonString, modelType);
+        if (configJson.exists()) {
+            String configJsonString = readStringFromFile(configJson);
+            if (!configJsonString.isEmpty()) {
+                Type modelType = new TypeToken<ConfigModel>() {
+                }.getType();
+                programConfig = new Gson().fromJson(configJsonString, modelType);
+            }
         } else {
-          // todo init the file with blank string  
+            programConfig = new ConfigModel();
+            programConfig.setAndroidStudioPath("");
+            boolean isWritten = writeStringToFile(configJson, new Gson().toJson(programConfig));
+            if (!isWritten) {
+                System.out.println("Config json write file failed");
+            }
         }
-    }
-    
-    private void saveAndroidStudioPath(String path) {
-        programConfig.setAndroidStudioPath(path);
-        
-        String jsonString = new Gson().toJson(programConfig);
-        File jsonFile = new File(saveFolder, "projects.json");
     }
     
     private String readStringFromFile(File jsonFile) {
@@ -102,14 +107,9 @@ public class SaveFileUtils {
         String jsonString = new Gson().toJson(projectModelList);
         File jsonFile = new File(saveFolder, "projects.json");
 
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(jsonFile));
-            bufferedWriter.write(jsonString);
-            bufferedWriter.close();
-
-            System.out.println("json updated succesfully");
-        } catch (IOException ex) {
-            Logger.getLogger(SaveFileUtils.class.getName()).log(Level.WARNING, null, ex);
+        var isWritten = writeStringToFile(jsonFile, jsonString);
+        if (!isWritten) {
+            System.out.println("File writing failed");
         }
     }
     
@@ -120,7 +120,9 @@ public class SaveFileUtils {
             bufferedWriter.write(data);
             bufferedWriter.close();
 
-            System.out.println("file updated succesfully");
+            isSuccess = true;
+
+            System.out.println("file updated successfully");
         } catch (IOException ex) {
             Logger.getLogger(SaveFileUtils.class.getName()).log(Level.WARNING, null, ex);
         }
