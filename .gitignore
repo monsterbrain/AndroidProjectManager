@@ -1,2 +1,8 @@
 **/nbproject/private/
 build/
+out/
+.idea/codeStyles/codeStyleConfig.xml
+.idea/codeStyles/Project.xml
+.idea/artifacts/AndroidProjectManager_jar.xml
+.idea/sbt.xml
+.idea/scala_settings.xml

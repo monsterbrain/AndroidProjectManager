@@ -1,8 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyleft (c) 2020. Monster brain inc.
+ *
+ * visit monsterbaininc.com for more details.
+ *
+ *
  */
+
 package com.monsterbrain.utils;
 
 import com.google.gson.Gson;
@@ -107,14 +110,14 @@ public class SaveFileUtils {
         String jsonString = new Gson().toJson(projectModelList);
         File jsonFile = new File(saveFolder, "projects.json");
 
-        var isWritten = writeStringToFile(jsonFile, jsonString);
+        boolean isWritten = writeStringToFile(jsonFile, jsonString);
         if (!isWritten) {
             System.out.println("File writing failed");
         }
     }
     
     private boolean writeStringToFile(File file, String data) {
-        var isSuccess = false;
+        boolean isSuccess = false;
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
             bufferedWriter.write(data);
