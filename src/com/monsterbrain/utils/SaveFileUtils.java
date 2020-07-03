@@ -41,6 +41,10 @@ public class SaveFileUtils {
         return SaveFileUtils.instance;
     }
 
+    public ConfigModel getProgramConfig() {
+        return programConfig;
+    }
+
     public List<ProjectModel> getProjectModelList() {
         return projectModelList;
     }
@@ -109,6 +113,16 @@ public class SaveFileUtils {
         }
         
         return isSuccess;
+    }
+     
+    public void setNewAndroidStudioPath(String path) {
+        programConfig.setAndroidStudioPath(path);
+
+        File configJson = new File(getSaveFileFolder(), "config.json");
+        boolean isWritten = writeStringToFile(configJson, new Gson().toJson(programConfig));
+        if (!isWritten) {
+            System.out.println("Config json write file failed");
+        }
     }
 
     public void addNewProjectToJson(ProjectModel model) {

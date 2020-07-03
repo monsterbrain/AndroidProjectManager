@@ -103,7 +103,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        androidStudioPathLabel = new javax.swing.JLabel();
         setAndroidStuidoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -114,7 +114,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
         mainPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         mainPanel.setLayout(mainPanelLayout);
 
-        jLabel1.setText("Android Studio path not set !");
+        androidStudioPathLabel.setText("Android Studio path not set !");
 
         setAndroidStuidoButton.setText("Set AS path");
         setAndroidStuidoButton.addActionListener(new java.awt.event.ActionListener() {
@@ -131,7 +131,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(513, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
+                        .addComponent(androidStudioPathLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(setAndroidStuidoButton))
                     .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -143,7 +143,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(setAndroidStuidoButton)
-                    .addComponent(jLabel1))
+                    .addComponent(androidStudioPathLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
                 .addContainerGap())
@@ -160,6 +160,9 @@ public class MainContentJFrame extends javax.swing.JFrame {
             // user selects a file
             File selectedFile = fileChooser.getSelectedFile();
             System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+            
+            androidStudioPathLabel.setText("Studio Path : "+selectedFile.getAbsolutePath());
+            SaveFileUtils.instance().setNewAndroidStudioPath(selectedFile.getAbsolutePath());
         }
     }//GEN-LAST:event_setAndroidStuidoButtonActionPerformed
 
@@ -197,13 +200,16 @@ public class MainContentJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel androidStudioPathLabel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JButton setAndroidStuidoButton;
     // End of variables declaration//GEN-END:variables
 
     private void loadProjectFromJson() {
         List<ProjectModel> projectList = SaveFileUtils.instance().getProjectModelList();
+        if(!SaveFileUtils.instance().getProgramConfig().getAndroidStudioPath().isEmpty()) {            
+            androidStudioPathLabel.setText(SaveFileUtils.instance().getProgramConfig().getAndroidStudioPath());
+        }
         for (int i = 0; i < projectList.size(); i++) {
             mainPanel.add(new ProjectJPanel(projectList.get(i), actionString -> handleAction(actionString)));
         }
