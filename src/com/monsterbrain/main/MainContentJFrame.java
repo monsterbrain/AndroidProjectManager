@@ -107,7 +107,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
         setAndroidStuidoButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Android Project Manager - APM 1.0");
+        setTitle("Android Project Manager - APM 1.0.1");
 
         java.awt.GridBagLayout mainPanelLayout = new java.awt.GridBagLayout();
         mainPanelLayout.columnWidths = new int[] {0};

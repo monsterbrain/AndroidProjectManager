@@ -159,15 +159,15 @@ public class ProjectJPanel extends javax.swing.JPanel {
         Process p;
         try {
             p = builder.start();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String line;
-//            while (true) {
-//                line = reader.readLine();
-//                if (line == null) {
-//                    break;
-//                }
-//                System.out.println(line);
-//            }
+            /*BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while (true) {
+                line = reader.readLine();
+                if (line == null) {
+                    break;
+                }
+                System.out.println(line);
+            }*/
         } catch (IOException ex) {
             Logger.getLogger(ProjectJPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
