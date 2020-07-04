@@ -3,7 +3,7 @@
 
 **Here's it in Action**
 
-<img src="img/apm_v1.0_screenshot.png" alt="drawing" width="640"/>
+<img src="img/apm_v1.0.1_screenshot.jpg" alt="drawing" width="640"/>
 
 ## [Download Now (jar executable)](https://github.com/monsterbrain/AndroidProjectManager/releases/tag/v1.0.1-beta)
 *Tested on windows OS. If any issues please file an [issue here](https://github.com/monsterbrain/AndroidProjectManager/issues)*
