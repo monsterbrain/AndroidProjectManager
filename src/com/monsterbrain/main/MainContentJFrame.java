@@ -28,7 +28,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
     public MainContentJFrame() {
         initComponents();
 
-        GridLayout gridLayout = new GridLayout(4, 3, 16, 16);
+        GridLayout gridLayout = new GridLayout(0, 2);
         mainPanel.setLayout(gridLayout);
         
         loadProjectFromJson();
@@ -110,7 +110,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
         setTitle("Android Project Manager - APM 1.0.1");
 
         java.awt.GridBagLayout mainPanelLayout = new java.awt.GridBagLayout();
-        mainPanelLayout.columnWidths = new int[] {0};
+        mainPanelLayout.columnWidths = new int[] {0, 150, 0, 150};
         mainPanelLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0, 5, 0};
         mainPanel.setLayout(mainPanelLayout);
 
@@ -205,7 +205,7 @@ public class MainContentJFrame extends javax.swing.JFrame {
     private javax.swing.JButton setAndroidStuidoButton;
     // End of variables declaration//GEN-END:variables
 
-    private void loadProjectFromJson() {
+    public void loadProjectFromJson() {
         List<ProjectModel> projectList = SaveFileUtils.instance().getProjectModelList();
         if(!SaveFileUtils.instance().getProgramConfig().getAndroidStudioPath().isEmpty()) {            
             androidStudioPathLabel.setText(SaveFileUtils.instance().getProgramConfig().getAndroidStudioPath());

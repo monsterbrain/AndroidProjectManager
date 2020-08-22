@@ -124,6 +124,20 @@ public class SaveFileUtils {
             System.out.println("Config json write file failed");
         }
     }
+    
+    public void setNewDisplayName(ProjectModel model, String newName) {
+        ProjectModel modelModify = projectModelList.get(projectModelList.indexOf(model));
+        modelModify.setDisplayName(newName);
+        saveProjectsJson(getSaveFileFolder());
+    }
+    
+    public void deleteProject(ProjectModel model) {
+        if (projectModelList.contains(model)) {
+            projectModelList.remove(model);
+            
+            saveProjectsJson(getSaveFileFolder());
+        }
+    }
 
     public void addNewProjectToJson(ProjectModel model) {
         File saveFolder = getSaveFileFolder();
@@ -131,6 +145,10 @@ public class SaveFileUtils {
         // add to project model list. todo Check for duplicates
         projectModelList.add(model);
 
+        saveProjectsJson(saveFolder);
+    }
+
+    private void saveProjectsJson(File saveFolder) {
         String jsonString = new Gson().toJson(projectModelList);
         File jsonFile = new File(saveFolder, "projects.json");
 

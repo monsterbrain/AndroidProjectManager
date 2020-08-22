@@ -5,6 +5,7 @@
  */
 package com.monsterbrain.ui;
 
+import com.monsterbrain.main.MainContentJFrame;
 import com.monsterbrain.model.ProjectModel;
 import com.monsterbrain.utils.Constants;
 import com.monsterbrain.utils.SaveFileUtils;
@@ -17,6 +18,7 @@ import java.util.function.Function;
 import javax.swing.border.TitledBorder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -37,7 +39,7 @@ public class ProjectJPanel extends javax.swing.JPanel {
         this.callbackFn = callback;
         projectInfo = model;
         initComponents();
-        showDetails();
+        updateTitle();
     }
 
     /**
@@ -53,8 +55,11 @@ public class ProjectJPanel extends javax.swing.JPanel {
         btnOpenSrcFolder = new javax.swing.JButton();
         btnOpenBuildFolder = new javax.swing.JButton();
         btnOpenInStudio = new javax.swing.JButton();
+        btnDeleteProject = new javax.swing.JButton();
+        projectTitleLabel = new javax.swing.JLabel();
+        btnEditTitle = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder("Project Title"));
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btnOpenFolder.setText("Open Folder");
         btnOpenFolder.addActionListener(new java.awt.event.ActionListener() {
@@ -84,33 +89,61 @@ public class ProjectJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnDeleteProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/monsterbrain/assets/ic_delete.png"))); // NOI18N
+        btnDeleteProject.setToolTipText("delete project");
+        btnDeleteProject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteProjectActionPerformed(evt);
+            }
+        });
+
+        projectTitleLabel.setText("Awesome Project");
+
+        btnEditTitle.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/monsterbrain/assets/ic_edit.png"))); // NOI18N
+        btnEditTitle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditTitleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnOpenInStudio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnOpenFolder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnOpenSrcFolder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnOpenBuildFolder)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addComponent(btnOpenBuildFolder, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(projectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDeleteProject, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnOpenInStudio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(projectTitleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditTitle)
+                    .addComponent(btnDeleteProject, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnOpenInStudio, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOpenFolder)
                     .addComponent(btnOpenSrcFolder)
                     .addComponent(btnOpenBuildFolder))
-                .addGap(20, 20, 20))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -173,18 +206,41 @@ public class ProjectJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnOpenInStudioActionPerformed
 
+    private void btnDeleteProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteProjectActionPerformed
+        int option = JOptionPane.showConfirmDialog(this.getRootPane(), "Do you want to delete the project ?");
+        System.out.println("option = " + option);
+        if (option == JOptionPane.YES_OPTION) {
+            SaveFileUtils.instance().deleteProject(projectInfo);
+            JOptionPane.showMessageDialog(this.getRootPane(), "Project deleted successfully. Please restart app to see changes :) ");
+        }
+    }//GEN-LAST:event_btnDeleteProjectActionPerformed
+
+    private void btnEditTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditTitleActionPerformed
+        String name = JOptionPane.showInputDialog("Enter a new Project Name (previous name: "+projectInfo.getDisplayName()+")");
+        System.out.println("name = " + name);
+        if (name != null && !name.isEmpty()) {
+            SaveFileUtils.instance().setNewDisplayName(projectInfo, name);
+            updateTitle();
+        }
+    }//GEN-LAST:event_btnEditTitleActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDeleteProject;
+    private javax.swing.JButton btnEditTitle;
     private javax.swing.JButton btnOpenBuildFolder;
     private javax.swing.JButton btnOpenFolder;
     private javax.swing.JButton btnOpenInStudio;
     private javax.swing.JButton btnOpenSrcFolder;
+    private javax.swing.JLabel projectTitleLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void showDetails() {
+    private void updateTitle() {
         // set project title
         if (getBorder() instanceof TitledBorder) {
             ((TitledBorder) getBorder()).setTitle(projectInfo.getDisplayName());
         }
+        
+        projectTitleLabel.setText(projectInfo.getDisplayName());
     }
 }
